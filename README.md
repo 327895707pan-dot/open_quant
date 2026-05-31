@@ -234,7 +234,7 @@ Tushare API
 **Python >= 3.12**，依赖见 `pyproject.toml`：
 
 ```
-pandas / numpy / joblib / matplotlib / duckdb / tqdm / tushare / scipy 
+pandas / numpy / joblib / matplotlib / duckdb / tqdm / tushare / scipy / TA-Lib 
 ```
 
 安装：

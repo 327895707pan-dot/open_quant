@@ -201,9 +201,18 @@ def specific_group(fac, stk, group_set, bench_df, n_groups=10, pathway_delay=0, 
 
     # 因子值最高组和最低组的索替诺比率 (Sortino Ratio)
     def calc_sortino(ret_series):
-        downside = ret_series[ret_series < 0]
-        if len(downside) > 0 and downside.std() > 0:
-            return float(ret_series.mean() / downside.std() * np.sqrt(242))
+        # 1. 截取下行部分
+        downside = ret_series.clip(upper=0)
+        
+        # 2. 计算下行波动率（二阶矩的平方根）
+        # 使用 (downside**2).mean() 而不是 .std()
+        # 注意：这里分母通常用 N 而不是 N-1
+        downside_deviation = np.sqrt((downside**2).mean())
+        
+        if downside_deviation > 0:
+        # 3. 年化计算：(日均收益 / 日下行波动率) * sqrt(242)
+            return float(ret_series.mean() / downside_deviation * np.sqrt(242))
+        
         return np.nan
 
     Sortino_long = calc_sortino(daily_ls["long"])

@@ -1,4 +1,6 @@
 # 存放常量，如指数代码、频率映射、常数
+from pathlib import Path
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 ## 指数名称与代码转换
 # 沪深300，中证500，中证800、中证1000，全市场
@@ -23,11 +25,12 @@ N_SIGMAS = 3
 # 达到api限制后，等待的时间（秒）
 LIMIT_SLEEP_SECONDS = 15
 
+## 新的写法更加稳健，即使在不同的目录下运行脚本，也能正确找到数据文件
 # 数据库路径常量
-DB_PATH = './Data/data.db'
+DB_PATH = str(REPO_ROOT / 'Data' / 'data.db')
 
 # 基础信息存储路径常量
-BASIC_INFO_PATH = 'Data/Metadata'
+BASIC_INFO_PATH = str(REPO_ROOT / 'Data' / 'Metadata')
 
 ## 存储财务数据的更新时间（因为获取时间很久，而且财务数据频率较低，所以单独记录更新时间，避免每次运行都更新财务数据）
 FETCH_LOG_PATH = f'{BASIC_INFO_PATH}/fetch_log.csv'

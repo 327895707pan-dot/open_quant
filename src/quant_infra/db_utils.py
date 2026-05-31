@@ -69,3 +69,50 @@ def write_to_db(df, table_name, save_mode ='replace'):
     finally:
         conn.close()
 
+def _normalize_imported_factor_df(df, factor_column='factor'):
+    # 1. 校验列名
+    required = ['ts_code', 'trade_date', factor_column]
+    if not set(required).issubset(df.columns):
+        missing = set(required) - set(df.columns)
+        raise ValueError(f'因子文件缺少必要列: {missing}')
+
+    # 2. 链式清洗逻辑
+    return (df[list(required)]
+            .rename(columns={factor_column: 'factor'})
+            .assign(
+                # 统一转为字符串并去空格
+                ts_code=lambda x: x['ts_code'].astype(str).str.strip(),
+                # 统一日期格式
+                trade_date=lambda x: pd.to_datetime(x['trade_date'].astype(str)).dt.strftime('%Y%m%d'),
+                # 强制转数值
+                factor=lambda x: pd.to_numeric(x['factor'], errors='coerce')
+            )
+            .dropna(subset=['ts_code', 'trade_date', 'factor'])
+            .query("ts_code != ''")
+            .drop_duplicates(subset=['ts_code', 'trade_date'], keep='last')
+            .sort_values(['trade_date', 'ts_code'])
+            .reset_index(drop=True))
+
+
+def import_factor_table(file_path, table_name, factor_column='factor', save_mode='append'):
+    """通用导入函数，支持自动识别格式。"""
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f'文件不存在: {file_path}')
+
+    # 1. 自动识别读取逻辑
+    ext = os.path.splitext(file_path)[1].lower()
+    read_map = {'.csv': pd.read_csv, '.parquet': pd.read_parquet, '.pq': pd.read_parquet}
+    
+    if ext not in read_map:
+        raise ValueError(f'不支持的格式: {ext}')
+    
+    # 2. 读取并标准化
+    raw_df = read_map[ext](file_path)
+    result = _normalize_imported_factor_df(raw_df, factor_column)
+
+    if result.empty:
+        return result
+
+    write_to_db(result, table_name, save_mode=save_mode)
+    print(f"✅ 导入成功: {table_name} | 行数: {len(result)} | 时间范围: {result['trade_date'].min()}~{result['trade_date'].max()}")
+    return result
