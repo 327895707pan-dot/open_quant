@@ -1,4 +1,5 @@
 # open_quant — 量化基础框架
+[![Star History Chart](https://api.star-history.com/chart?repos=ShenzhenLime/open_quant&type=date&legend=top-left)](https://www.star-history.com/?repos=ShenzhenLime%2Fopen_quant&type=date&legend=top-left)
 
 **使用示例视频**：【耗时一个月，我搭建了最适合新手的完整量化框架。】 https://www.bilibili.com/video/BV1skXeBTEq3/?share_source=copy_web&vd_source=268eee2a1463962256f74e1052f0bbc1
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
