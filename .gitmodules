@@ -1,9 +1,9 @@
 [submodule "factor_mining"]
 	path = factor_mining
-	url = https://github.com/ShenzhenLime/quant_factors.git
+	url = git@github.com:ShenzhenLime/factor_mining.git
 [submodule "deep_learning"]
 	path = deep_learning
-	url = https://github.com/ShenzhenLime/relational_decom_transformer.git
+	url = git@github.com:ShenzhenLime/deep_learning.git
 
 
 

@@ -8,6 +8,7 @@ Data/
 lead_lag/
 # deep_learning/
 test.csv
+todo
 
 # Python 缓存
 __pycache__/
