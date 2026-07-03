@@ -445,6 +445,8 @@ def config():
         slow_ema_period=3,
         rsi_period=2,
         atr_period=2,
+        rsi_long_ceiling=100,
+        rsi_short_floor=0,
         risk_per_trade=10,
         atr_stop_multiple=2,
     )
@@ -490,6 +492,24 @@ def test_matching_existing_position_holds():
 
     assert signal.action is SignalAction.HOLD
     assert "already long" in signal.reason
+
+
+def test_rsi_filter_blocks_overheated_long_signal():
+    candles = make_candles([10, 9, 8, 11, 14])
+    strict_config = TrendModelConfig(
+        fast_ema_period=2,
+        slow_ema_period=3,
+        rsi_period=2,
+        atr_period=2,
+        rsi_long_ceiling=50,
+        rsi_short_floor=0,
+        risk_per_trade=10,
+        atr_stop_multiple=2,
+    )
+
+    signal = TrendModel(strict_config).generate_signal(candles)
+
+    assert signal.action is SignalAction.HOLD
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
