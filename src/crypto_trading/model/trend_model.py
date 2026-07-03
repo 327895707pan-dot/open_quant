@@ -86,10 +86,8 @@ class TrendModel:
         price = candles[-1].close
         crossed_up = previous_fast <= previous_slow and current_fast > current_slow
         crossed_down = previous_fast >= previous_slow and current_fast < current_slow
-        long_setup = current_fast > current_slow
-        short_setup = current_fast < current_slow
 
-        if long_setup and current_rsi < self.config.rsi_long_ceiling:
+        if crossed_up and current_rsi < self.config.rsi_long_ceiling:
             if current_position is PositionDirection.LONG:
                 return Signal.hold(symbol, "already long")
             stop_price = price - (current_atr * self.config.atr_stop_multiple)
@@ -97,11 +95,7 @@ class TrendModel:
             return Signal(
                 symbol=symbol,
                 action=SignalAction.BUY,
-                reason=(
-                    "fast EMA crossed above slow EMA"
-                    if crossed_up
-                    else "fast EMA remains above slow EMA"
-                ),
+                reason="fast EMA crossed above slow EMA",
                 price=price,
                 advice=PositionAdvice(
                     direction=PositionDirection.LONG,
@@ -110,7 +104,7 @@ class TrendModel:
                 ),
             )
 
-        if short_setup and current_rsi > self.config.rsi_short_floor:
+        if crossed_down and current_rsi > self.config.rsi_short_floor:
             if current_position is PositionDirection.SHORT:
                 return Signal.hold(symbol, "already short")
             stop_price = price + (current_atr * self.config.atr_stop_multiple)
@@ -118,11 +112,7 @@ class TrendModel:
             return Signal(
                 symbol=symbol,
                 action=SignalAction.SELL,
-                reason=(
-                    "fast EMA crossed below slow EMA"
-                    if crossed_down
-                    else "fast EMA remains below slow EMA"
-                ),
+                reason="fast EMA crossed below slow EMA",
                 price=price,
                 advice=PositionAdvice(
                     direction=PositionDirection.SHORT,

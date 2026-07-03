@@ -38,7 +38,7 @@ def test_empty_input_holds():
 
 
 def test_buy_signal_on_fast_cross_above_slow():
-    candles = make_candles([10, 9, 8, 11, 14])
+    candles = make_candles([10, 9, 8, 9, 12])
 
     signal = TrendModel(config()).generate_signal(candles)
 
@@ -50,7 +50,7 @@ def test_buy_signal_on_fast_cross_above_slow():
 
 
 def test_sell_signal_on_fast_cross_below_slow():
-    candles = make_candles([10, 11, 12, 9, 6])
+    candles = make_candles([10, 11, 12, 11, 8])
 
     signal = TrendModel(config()).generate_signal(candles)
 
@@ -61,7 +61,7 @@ def test_sell_signal_on_fast_cross_below_slow():
 
 
 def test_matching_existing_position_holds():
-    candles = make_candles([10, 9, 8, 11, 14])
+    candles = make_candles([10, 9, 8, 9, 12])
 
     signal = TrendModel(config()).generate_signal(
         candles,
@@ -73,7 +73,7 @@ def test_matching_existing_position_holds():
 
 
 def test_rsi_filter_blocks_overheated_long_signal():
-    candles = make_candles([10, 9, 8, 11, 14])
+    candles = make_candles([10, 9, 8, 9, 12])
     strict_config = TrendModelConfig(
         fast_ema_period=2,
         slow_ema_period=3,
@@ -88,3 +88,12 @@ def test_rsi_filter_blocks_overheated_long_signal():
     signal = TrendModel(strict_config).generate_signal(candles)
 
     assert signal.action is SignalAction.HOLD
+
+
+def test_bullish_regime_without_final_crossover_holds():
+    candles = make_candles([10, 9, 8, 11, 14])
+
+    signal = TrendModel(config()).generate_signal(candles)
+
+    assert signal.action is SignalAction.HOLD
+    assert "no crossover" in signal.reason
