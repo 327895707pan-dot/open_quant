@@ -6,8 +6,10 @@ from crypto_trading.model.market_data import Candle, validate_candles
 
 
 def _validate_period(period: int) -> None:
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise ValueError("period must be a positive integer")
     if period <= 0:
-        raise ValueError("period must be positive")
+        raise ValueError("period must be a positive integer")
 
 
 def ema(values: Sequence[float], period: int) -> list[float | None]:

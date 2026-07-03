@@ -47,3 +47,9 @@ def test_atr_uses_true_range_and_period_average():
 def test_indicators_reject_invalid_period(period):
     with pytest.raises(ValueError, match="period"):
         ema([1, 2, 3], period)
+
+
+@pytest.mark.parametrize("period", [True, 3.5, 3.0])
+def test_indicators_reject_non_integer_period(period):
+    with pytest.raises(ValueError, match="period"):
+        ema([1, 2, 3], period)
