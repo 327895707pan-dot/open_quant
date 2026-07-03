@@ -287,7 +287,7 @@ def test_atr_uses_true_range_and_period_average():
     assert result[0] is None
     assert result[1] is None
     assert result[2] == pytest.approx(4)
-    assert result[3] == pytest.approx(4.3333333333)
+    assert result[3] == pytest.approx(4.6666666667)
 
 
 @pytest.mark.parametrize("period", [0, -1])
