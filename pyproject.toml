@@ -1,29 +1,29 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=70", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "quant_infra"
+name = "binance-futures-event-system"
 version = "0.1.0"
-description = "量化因子研究核心库"
+description = "Binance USD-M Futures event-driven trading system skeleton"
 readme = "README.md"
 requires-python = ">=3.12"
-# 在这里列出你的项目必须安装的库
 dependencies = [
-    "pandas>=2.3.3",
-    "numpy>=2.3.3",
-    "joblib>=1.5.3",
-    "matplotlib>=3.10.8",
-    "duckdb>=1.5.0",
-    "tqdm>=4.67.3",
-    "tushare>=1.4.25",
-    "scipy>=1.16.3",
-    "TA-Lib>=0.6.8",
-    "sklearn>=1.8.0",
-    "torch>=2.11.0",
-    "tensorboard>=2.20.0",
+    "duckdb",
+    "pandas",
+    "numpy",
+    "httpx",
+    "websockets",
+    "pydantic",
+    "python-dotenv",
+    "pytest",
+    "pytest-asyncio",
 ]
 
 [tool.setuptools.packages.find]
-# 这告诉 setuptools 去 src 目录下寻找代码
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+pythonpath = ["src"]
