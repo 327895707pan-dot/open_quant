@@ -71,6 +71,19 @@ state-machine, and risk tests do not require network access or real keys.
 pytest tests/crypto_trading -q
 ```
 
+## Trend Model
+
+The first real model is a deterministic EMA/RSI/ATR trend model. It can be
+tested without Binance credentials:
+
+```bash
+pytest tests/crypto_trading/model -q
+```
+
+The model package is offline-only. `TrendStrategy` adapts model signals to the
+existing order flow, but trading remains disabled unless the strategy is created
+with `enable_trading=True`, and all orders still pass through `RiskManager`.
+
 ## Safety Principles
 
 - Testnet by default.
