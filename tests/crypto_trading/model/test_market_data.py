@@ -86,6 +86,50 @@ def test_signal_rejects_non_positive_price():
         )
 
 
-def test_position_advice_requires_positive_quantity():
-    with pytest.raises(ValueError, match="quantity"):
-        PositionAdvice(direction=PositionDirection.LONG, quantity=0, stop_price=99)
+@pytest.mark.parametrize(
+    ("quantity", "expected_match"),
+    [
+        (0, "quantity must be positive"),
+        (-1, "quantity must be positive"),
+        (True, "quantity must be a real number"),
+        (False, "quantity must be a real number"),
+        ("1", "quantity must be a real number"),
+        (float("nan"), "quantity must be finite"),
+        (float("inf"), "quantity must be finite"),
+    ],
+)
+def test_position_advice_rejects_malformed_quantity(quantity, expected_match):
+    with pytest.raises(ValueError, match=expected_match):
+        PositionAdvice(direction=PositionDirection.LONG, quantity=quantity, stop_price=99)
+
+
+@pytest.mark.parametrize(
+    ("stop_price", "expected_match"),
+    [
+        (0, "stop_price must be positive"),
+        (-1, "stop_price must be positive"),
+        (True, "stop_price must be a real number"),
+        (False, "stop_price must be a real number"),
+        ("1", "stop_price must be a real number"),
+        (float("nan"), "stop_price must be finite"),
+        (float("inf"), "stop_price must be finite"),
+    ],
+)
+def test_position_advice_rejects_malformed_stop_price(stop_price, expected_match):
+    with pytest.raises(ValueError, match=expected_match):
+        PositionAdvice(direction=PositionDirection.LONG, quantity=1, stop_price=stop_price)
+
+
+def test_validate_candles_rejects_malformed_entries():
+    candle = Candle(
+        symbol="BTCUSDT",
+        open_time=1,
+        open=100,
+        high=110,
+        low=95,
+        close=105,
+        volume=1,
+    )
+
+    with pytest.raises(ValueError, match="candles must contain Candle instances"):
+        validate_candles([candle, None])

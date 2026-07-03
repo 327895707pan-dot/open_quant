@@ -88,3 +88,22 @@ Addressed the review findings for malformed boundary handling:
 
 - `E:\量化交易\open_quant\src\crypto_trading\model\market_data.py`
 - `E:\量化交易\open_quant\tests\crypto_trading\model\test_market_data.py`
+
+## Review follow-up: remaining findings
+
+Addressed the last two review items:
+
+- `PositionAdvice` now rejects malformed `quantity` and `stop_price` values, including `NaN`, `inf`, booleans, non-numeric values, and non-positive numbers, with `ValueError`.
+- `validate_candles` now rejects malformed sequence entries such as `None` with `ValueError` before any attribute access.
+
+## Tests run for remaining findings
+
+1. `.\.venv\Scripts\python.exe -m pytest tests/crypto_trading/model/test_market_data.py -q`
+   - Output: `21 passed in 0.05s`
+2. `.\.venv\Scripts\python.exe -m pytest tests/crypto_trading -q`
+   - Output: `36 passed in 0.95s`
+
+## Files changed for remaining findings
+
+- `E:\量化交易\open_quant\src\crypto_trading\model\market_data.py`
+- `E:\量化交易\open_quant\tests\crypto_trading\model\test_market_data.py`

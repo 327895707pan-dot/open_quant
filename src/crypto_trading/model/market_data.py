@@ -46,10 +46,13 @@ class PositionAdvice:
     stop_price: float | None = None
 
     def __post_init__(self) -> None:
-        if self.quantity <= 0:
-            raise ValueError("quantity must be positive")
-        if self.stop_price is not None and self.stop_price <= 0:
-            raise ValueError("stop_price must be positive")
+        object.__setattr__(self, "quantity", _validate_positive_price("quantity", self.quantity))
+        if self.stop_price is not None:
+            object.__setattr__(
+                self,
+                "stop_price",
+                _validate_positive_price("stop_price", self.stop_price),
+            )
 
 
 @dataclass(frozen=True)
@@ -73,6 +76,8 @@ class Signal:
 def validate_candles(candles: Sequence[Candle]) -> None:
     previous_open_time: int | None = None
     for candle in candles:
+        if not isinstance(candle, Candle):
+            raise ValueError("candles must contain Candle instances")
         if candle.high < max(candle.open, candle.close, candle.low):
             raise ValueError("high must be greater than or equal to open, close, and low")
         if candle.low > min(candle.open, candle.close, candle.high):
@@ -122,3 +127,4 @@ def _validate_positive_price(name: str, value: object) -> float:
     if numeric <= 0:
         raise ValueError(f"{name} must be positive")
     return numeric
+
