@@ -68,3 +68,23 @@ Command:
 
 - Validation is intentionally minimal and only covers the behaviors required for Task 1.
 - `validate_candles` currently assumes candle objects are already constructed and focuses on sequence-level checks plus obvious price constraints.
+
+## Review fix follow-up
+
+Addressed the review findings for malformed boundary handling:
+
+- `Candle` now rejects malformed symbol, open time, and price inputs with `ValueError` during construction.
+- `Signal` now rejects non-positive `price` values with `ValueError`.
+- `validate_candles` remains responsible for collection-level validation and candle ordering checks.
+
+## Tests run for review fixes
+
+1. `.\.venv\Scripts\python.exe -m pytest tests/crypto_trading/model/test_market_data.py -q`
+   - Output: `7 passed in 0.02s`
+2. `.\.venv\Scripts\python.exe -m pytest tests/crypto_trading -q`
+   - Output: `22 passed in 0.95s`
+
+## Files changed for review fixes
+
+- `E:\量化交易\open_quant\src\crypto_trading\model\market_data.py`
+- `E:\量化交易\open_quant\tests\crypto_trading\model\test_market_data.py`
