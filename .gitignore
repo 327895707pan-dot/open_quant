@@ -1,41 +1,15 @@
-# 数据库文件
-*.db
-
-# 个人文件
-guide/
-# 保护版权
-Data/
-lead_lag/
-# deep_learning/
-test.csv
-todo
-
-# Python 缓存
+.env
 __pycache__/
-*.py[cod]
-*$py.class
-
-# 虚拟环境
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyc
+Data/
+logs/
+*.db
+*.duckdb
+.venv/
 venv/
-env/
-
-# IDE
-.idea/
-.vscode/
-
-# LaTeX 源文件及编译产物（保留 PDF）
-*.tex
-*.aux
-*.log
-*.nav
-*.snm
-*.toc
-*.vrb
-*.out
-*.fls
-*.fdb_latexmk
-*.synctex.gz
-*.bbl
-*.blg
-# 明确允许 PDF 上传
-!*.pdf
+dist/
+build/
+*.egg-info/
