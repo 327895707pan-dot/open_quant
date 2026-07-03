@@ -6,6 +6,7 @@ from crypto_trading.model.market_data import (
     SignalAction,
     validate_candles,
 )
+from crypto_trading.model.trend_model import TrendModel, TrendModelConfig
 
 __all__ = [
     "Candle",
@@ -13,5 +14,7 @@ __all__ = [
     "PositionDirection",
     "Signal",
     "SignalAction",
+    "TrendModel",
+    "TrendModelConfig",
     "validate_candles",
 ]
