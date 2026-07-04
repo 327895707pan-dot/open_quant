@@ -6,6 +6,7 @@ __pycache__/
 *.pyc
 Data/
 logs/
+.tmp/
 *.db
 *.duckdb
 .venv/
