@@ -26,6 +26,7 @@ class TrendStrategy(BaseStrategy):
         self._positions: dict[str, PositionDirection] = {
             symbol.upper(): PositionDirection.FLAT for symbol in symbols
         }
+        self._last_signal_open_time: dict[str, int] = {}
 
     def add_candle(self, candle: Candle) -> None:
         symbol = candle.symbol.upper()
@@ -42,6 +43,11 @@ class TrendStrategy(BaseStrategy):
             return
 
         for symbol, candles in self._candles.items():
+            if not candles:
+                continue
+            latest_candle = candles[-1]
+            if self._last_signal_open_time.get(symbol) == latest_candle.open_time:
+                continue
             signal = self.model.generate_signal(
                 candles,
                 current_position=self._positions.get(symbol, PositionDirection.FLAT),
@@ -55,4 +61,4 @@ class TrendStrategy(BaseStrategy):
                 side=side,
                 quantity=signal.advice.quantity,
             )
-            self._positions[symbol] = signal.advice.direction
+            self._last_signal_open_time[symbol] = latest_candle.open_time

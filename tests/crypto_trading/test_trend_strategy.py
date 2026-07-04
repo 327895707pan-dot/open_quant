@@ -1,6 +1,6 @@
 import pytest
 
-from crypto_trading.model.market_data import Candle
+from crypto_trading.model.market_data import Candle, PositionDirection
 from crypto_trading.model.trend_model import TrendModel, TrendModelConfig
 from crypto_trading.strategy.trend_strategy import TrendStrategy
 
@@ -70,3 +70,18 @@ async def test_trend_strategy_routes_enabled_signal_to_order_manager():
     assert manager.market_orders
     assert manager.market_orders[0]["symbol"] == "BTCUSDT"
     assert manager.market_orders[0]["side"] == "BUY"
+
+
+@pytest.mark.asyncio
+async def test_trend_strategy_does_not_treat_order_request_as_fill():
+    strategy = TrendStrategy(["BTCUSDT"], model=model(), enable_trading=True)
+    manager = RecordingOrderManager()
+    strategy.set_order_manager(manager)
+    for candle in make_candles([10, 9, 8, 9, 12]):
+        strategy.add_candle(candle)
+
+    await strategy.on_timer()
+    await strategy.on_timer()
+
+    assert len(manager.market_orders) == 1
+    assert strategy._positions["BTCUSDT"] is PositionDirection.FLAT

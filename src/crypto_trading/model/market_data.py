@@ -127,4 +127,3 @@ def _validate_positive_price(name: str, value: object) -> float:
     if numeric <= 0:
         raise ValueError(f"{name} must be positive")
     return numeric
-
