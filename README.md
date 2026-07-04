@@ -80,6 +80,42 @@ tested without Binance credentials:
 pytest tests/crypto_trading/model -q
 ```
 
+Minimal offline backtest example:
+
+```python
+from crypto_trading.model import Candle, TrendModel, TrendModelConfig
+from crypto_trading.model.backtest import Backtester
+
+
+def candle(index: int, close: float) -> Candle:
+    return Candle(
+        symbol="BTCUSDT",
+        open_time=index,
+        open=close - 1,
+        high=close + 2,
+        low=close - 2,
+        close=close,
+        volume=1,
+    )
+
+
+model = TrendModel(
+    TrendModelConfig(
+        fast_ema_period=2,
+        slow_ema_period=3,
+        rsi_period=2,
+        atr_period=2,
+        rsi_long_ceiling=100,
+        rsi_short_floor=0,
+    )
+)
+result = Backtester(model).run(
+    [candle(index, close) for index, close in enumerate([10, 9, 8, 9, 12, 11, 8])]
+)
+
+print(result.trade_count, result.net_pnl)
+```
+
 The model package is offline-only. `TrendStrategy` adapts model signals to the
 existing order flow, but trading remains disabled unless the strategy is created
 with `enable_trading=True`, and all orders still pass through `RiskManager`.
